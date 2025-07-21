@@ -1,4 +1,5 @@
 import React from "react"
+<<<<<<< HEAD
 import { Sparkles, Edit, Hash } from "lucide-react"
 
 const BlogTitles = () => {
@@ -80,6 +81,13 @@ const BlogTitles = () => {
           </div>
         </div>
       </div>
+=======
+
+const BlogTitles = () => {
+  return (
+    <div>
+      <h1>BlogTitles</h1>
+>>>>>>> cf9b11ec94f253655d8ea226c5766f584f813f09
     </div>
   )
 }

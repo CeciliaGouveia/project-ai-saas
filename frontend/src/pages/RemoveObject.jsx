@@ -1,4 +1,5 @@
 import React from "react"
+<<<<<<< HEAD
 import { Scissors, Sparkles } from "lucide-react"
 
 const RemoveObject = () => {
@@ -61,6 +62,13 @@ const RemoveObject = () => {
           </div>
         </div>
       </div>
+=======
+
+const RemoveObject = () => {
+  return (
+    <div>
+      <h1>RemoveObject</h1>
+>>>>>>> cf9b11ec94f253655d8ea226c5766f584f813f09
     </div>
   )
 }

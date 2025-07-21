@@ -1,4 +1,5 @@
 import React from "react"
+<<<<<<< HEAD
 import { useUser } from "@clerk/clerk-react"
 import { dummyPublishedCreationData } from "../assets/assets.js"
 import { Heart } from "lucide-react"
@@ -50,6 +51,13 @@ const Community = () => {
           </div>
         ))}
       </div>
+=======
+
+const Community = () => {
+  return (
+    <div>
+      <h1>Community</h1>
+>>>>>>> cf9b11ec94f253655d8ea226c5766f584f813f09
     </div>
   )
 }

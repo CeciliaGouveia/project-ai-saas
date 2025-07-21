@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import React from "react"
+=======
+>>>>>>> cf9b11ec94f253655d8ea226c5766f584f813f09
 import { Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import Layout from "./pages/Layout"
@@ -10,6 +13,7 @@ import RemoveBackground from "./pages/RemoveBackground"
 import RemoveObject from "./pages/RemoveObject"
 import ReviewResume from "./pages/ReviewResume"
 import Community from "./pages/Community"
+<<<<<<< HEAD
 import { useAuth } from "@clerk/clerk-react"
 
 function App() {
@@ -18,6 +22,10 @@ function App() {
     getToken().then((token) => console.log(token))
   }, [])
 
+=======
+
+function App() {
+>>>>>>> cf9b11ec94f253655d8ea226c5766f584f813f09
   return (
     <div>
       <Routes>

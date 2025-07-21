@@ -1,4 +1,5 @@
 import React from "react"
+<<<<<<< HEAD
 import { Image } from "lucide-react"
 
 const GenerateImages = () => {
@@ -94,6 +95,13 @@ const GenerateImages = () => {
           </div>
         </div>
       </div>
+=======
+
+const GenerateImages = () => {
+  return (
+    <div>
+      <h1>GenerateImages</h1>
+>>>>>>> cf9b11ec94f253655d8ea226c5766f584f813f09
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import React from "react"
+<<<<<<< HEAD
 import { Eraser } from "lucide-react"
 
 const RemoveBackground = () => {
@@ -52,6 +53,13 @@ const RemoveBackground = () => {
           </div>
         </div>
       </div>
+=======
+
+const RemoveBackground = () => {
+  return (
+    <div>
+      <h1>RemoveBackground</h1>
+>>>>>>> cf9b11ec94f253655d8ea226c5766f584f813f09
     </div>
   )
 }

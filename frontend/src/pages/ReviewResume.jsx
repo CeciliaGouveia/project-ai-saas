@@ -1,4 +1,5 @@
 import React from "react"
+<<<<<<< HEAD
 import { FileText } from "lucide-react"
 
 const ReviewResume = () => {
@@ -52,6 +53,13 @@ const ReviewResume = () => {
           </div>
         </div>
       </div>
+=======
+
+const ReviewResume = () => {
+  return (
+    <div>
+      <h1>ReviewResume</h1>
+>>>>>>> cf9b11ec94f253655d8ea226c5766f584f813f09
     </div>
   )
 }
