@@ -12,7 +12,7 @@ const Dashboard = () => {
 
   const getDashboardData = async () => {
     try {
-      const { data } = await axios.get("/user/get-user-creations", {
+      const { data } = await axios.get("/api/user/get-user-creations", {
         headers: {
           Authorization: `Bearer ${await getToken()}`,
         },

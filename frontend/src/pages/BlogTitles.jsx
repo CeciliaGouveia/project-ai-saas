@@ -37,7 +37,7 @@ const BlogTitles = () => {
       const prompt = `Generate five blog titles in Portuguese for the keyword '${input}' in the category '${selectedCategory}', using trending search topics related to this subject. Each title must be up to exactly 150 characters, and must not exceed 170 characters.`
 
       const { data } = await axios.post(
-        "/ai/generate-blog-title",
+        "/api/ai/generate-blog-title",
         {
           prompt,
         },

@@ -23,7 +23,7 @@ const RemoveBackground = () => {
       formData.append("image", input)
 
       const { data } = await axios.post(
-        "/ai/remove-image-background",
+        "/api/ai/remove-image-background",
         formData,
         { headers: { Authorization: `Bearer ${await getToken()}` } }
       )

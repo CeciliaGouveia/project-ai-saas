@@ -35,7 +35,7 @@ const WriteArticle = () => {
       const prompt = `Write an ${params[0]} about ${input} in exactly ${params[1]}`
 
       const { data } = await axios.post(
-        "/ai/generate-article",
+        "/api/ai/generate-article",
         {
           prompt,
           length: selectedLength.length,
