@@ -7,6 +7,7 @@ import {
   uploadImageRemoveBackToCloudinary,
   uploadImageRemoveObjToCloudinary,
 } from "../utils/cloudinary.js"
+import { extractTextFromPdf } from "../utils/pdfReader.js"
 
 export const generateArticle = async (req, res) => {
   try {
@@ -19,15 +20,13 @@ export const generateArticle = async (req, res) => {
     const free_usage = req.free_usage
 
     if (plan !== "premium" && free_usage >= 10) {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Limit reached. Upgrade to continue",
       })
     }
 
-    const customPrompt = `Crie um artigo sobre ${prompt}`
-
-    const content = await generateGeminiAIResponse(customPrompt, length)
+    const content = await generateGeminiAIResponse(prompt, length)
 
     await sql` INSERT INTO creations (user_id, prompt,content, type) VALUES (${userId}, ${prompt}, ${content}, 'article')`
 
@@ -39,10 +38,10 @@ export const generateArticle = async (req, res) => {
       })
     }
 
-    res.json({ success: true, content })
+    res.status(200).json({ success: true, content })
   } catch (err) {
     console.error(err.message)
-    res.json({ success: false, message: err.message })
+    res.status(500).json({ success: false, message: err.message })
   }
 }
 
@@ -52,14 +51,14 @@ export const generateBlogTitle = async (req, res) => {
 
     const { prompt } = req.body
 
-    const length = 100
+    const length = 200
 
     const plan = req.plan
 
     const free_usage = req.free_usage
 
     if (plan !== "premium" && free_usage >= 10) {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "Limit reached. Upgrade to continue",
       })
@@ -77,10 +76,10 @@ export const generateBlogTitle = async (req, res) => {
       })
     }
 
-    res.json({ success: true, content })
+    res.status(200).json({ success: true, content })
   } catch (err) {
     console.error(err.message)
-    res.json({ success: false, message: err.message })
+    res.status(500).json({ success: false, message: err.message })
   }
 }
 
@@ -93,7 +92,7 @@ export const generateImage = async (req, res) => {
     const plan = req.plan
 
     if (plan !== "premium") {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "This feature is only available for premium subscriptions",
       })
@@ -105,7 +104,7 @@ export const generateImage = async (req, res) => {
     if (!imageBuffer) {
       return res
         .status(500)
-        .json({ success: false, message: "Erro ao gerar a imagem." })
+        .json({ success: false, message: "Error generating image." })
     }
 
     // salvando a imagem gerada no cloudinary
@@ -116,10 +115,10 @@ export const generateImage = async (req, res) => {
       publish ?? false
     })`
 
-    res.json({ success: true, content: secure_url })
+    res.status(200).json({ success: true, content: secure_url })
   } catch (err) {
     console.error(err.message)
-    res.json({ success: false, message: err.message })
+    res.status(500).json({ success: false, message: err.message })
   }
 }
 
@@ -132,13 +131,13 @@ export const removeImageBackground = async (req, res) => {
     if (!image) {
       return res
         .status(400)
-        .json({ success: false, message: "Imagem não enviada." })
+        .json({ success: false, message: "Image doesn't sent." })
     }
 
     const plan = req.plan
 
     if (plan !== "premium") {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "This feature is only available for premium subscriptions",
       })
@@ -150,10 +149,10 @@ export const removeImageBackground = async (req, res) => {
     // salvando no banco de dados
     await sql` INSERT INTO creations (user_id, prompt,content, type) VALUES (${userId}, 'Remove background from image', ${secure_url}, 'image')`
 
-    res.json({ success: true, content: secure_url })
+    res.status(200).json({ success: true, content: secure_url })
   } catch (err) {
     console.error(err.message)
-    res.json({ success: false, message: err.message })
+    res.status(500).json({ success: false, message: err.message })
   }
 }
 
@@ -167,13 +166,13 @@ export const removeImageObject = async (req, res) => {
     if (!image) {
       return res
         .status(400)
-        .json({ success: false, message: "Imagem não enviada." })
+        .json({ success: false, message: "Image doesn't sent." })
     }
 
     const plan = req.plan
 
     if (plan !== "premium") {
-      return res.json({
+      return res.status(401).json({
         success: false,
         message: "This feature is only available for premium subscriptions",
       })
@@ -185,9 +184,54 @@ export const removeImageObject = async (req, res) => {
     // salvando no banco de dados
     await sql` INSERT INTO creations (user_id, prompt,content, type) VALUES (${userId}, ${`Removed ${object} from image`}, ${imgUrl}, 'image')`
 
-    res.json({ success: true, content: imgUrl })
+    res.status(200).json({ success: true, content: imgUrl })
   } catch (err) {
     console.error(err.message)
-    res.json({ success: false, message: err.message })
+    res.status(500).json({ success: false, message: err.message })
+  }
+}
+
+export const resumeReview = async (req, res) => {
+  try {
+    const { userId } = req.auth()
+    const resume = req.file
+    const length = 1000
+
+    if (!resume) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Resume doesn't sent." })
+    }
+
+    const plan = req.plan
+
+    if (plan !== "premium") {
+      return res.status(401).json({
+        success: false,
+        message: "This feature is only available for premium subscriptions",
+      })
+    }
+
+    // Limitando envio de arquivos até 5mb
+    if (resume.size > 5 * 1024 * 1024) {
+      return res.status(413).json({
+        success: false,
+        message: "Resume file size exceeds allowed size (5MB).",
+      })
+    }
+
+    const resumeText = await extractTextFromPdf(resume.path)
+
+    const prompt = `Review the following summary and provide constructive feedback on your strengths, weaknesses, and areas for improvement, all in portuguese. Your feedback should be no longer than 11000 characters. Resume Content:\n\n${resumeText}`
+
+    const content = await generateGeminiAIResponse(prompt, length)
+
+    // salvando no banco de dados
+    await sql` INSERT INTO creations (user_id, prompt,content, type) VALUES (${userId}, 'Review the uploaded resume', ${content}, 'resume-review')`
+
+    res.status(200).json({ success: true, content })
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).json({ success: false, message: err.message })
   }
 }

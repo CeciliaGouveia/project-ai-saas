@@ -6,6 +6,7 @@ import {
   generateImage,
   removeImageBackground,
   removeImageObject,
+  resumeReview,
 } from "../controllers/ai.controller.js"
 import { upload } from "../middlewares/multer.js"
 
@@ -15,16 +16,22 @@ featuresRouter.post("/generate-article", auth, generateArticle)
 featuresRouter.post("/generate-blog-title", auth, generateBlogTitle)
 featuresRouter.post("/generate-image", auth, generateImage)
 featuresRouter.post(
-  "/remove-background",
+  "/remove-image-background",
   auth,
   upload.single("image"),
   removeImageBackground
 )
 featuresRouter.post(
-  "/remove-object",
+  "/remove-image-object",
   auth,
   upload.single("image"),
   removeImageObject
+)
+featuresRouter.post(
+  "/resume-review",
+  auth,
+  upload.single("resume"),
+  resumeReview
 )
 
 export default featuresRouter
